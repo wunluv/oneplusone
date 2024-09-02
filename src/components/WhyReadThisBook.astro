@@ -1,0 +1,58 @@
+---
+import Instagram from "./icons/Instagram.astro";
+import Linkedin from "./icons/Linkedin.astro";
+import Twitter from "./icons/Twitter.astro";
+import { Image } from "astro:assets";
+
+import { author } from "../config.json";
+---
+
+<div class="bg-gray-50">
+  <div class="max-w-screen-xl mx-auto py-16">
+    <h2 class="text-5xl mb-8 font-semibold text-gray-900 px-4 font-serif">
+      Why read this<!-- -->&nbsp;<span class="underline">book?</span>
+    </h2><div class="flex-none sm:flex">
+      <div class="sm:flex-1 px-4">
+        <Image
+          class="mb-4 rounded-md"
+          src={"/author.jpeg"}
+          width={500}
+          height={500}
+          alt={author.name}
+          format={"avif"}
+        />
+      </div><div class="text-lg text-gray-600 sm:flex-1 px-4 font-body">
+        <p class="mb-4">
+          This work began in 2020, after Normand healed from his stroke. It
+          marked a quantum leap in the depth of his writing. The work is
+          actively being edited and reviewed. Publication will happen in mid
+          2025.
+        </p><p class="mb-4 p-3 font-style: italic">
+          Born in Montreal, Quebec on February 1st, 1947 (at 01:50 am for the
+          curious astrologer). Studies in anthropology (linguistics) at
+          Université de Montréal and McGill University. Teaching anthropology at
+          the college level in Montreal from 1969-1979. From 1979 to 1982,
+          working for Robert Laffont publisher(Paris) in Montreal and from
+          1983-1999 working in IT as a private consultant for the Quebec
+          Government (Ministry of Education), the Federal Government (Asbestos
+          Institute, National Film Board of Canada). In 2005, I moved to Perth,
+          Western Australia and became Australian Citizen in August 2018. Still
+          living in Perth. .
+        </p>
+        <p class="mb-4 p-3 font-style: italic">
+          I began writing this first series of 70 blogs from November 2013 till
+          June 2014, but I was abruptly interrupted by a major ischaemic stroke
+          that left me lying by myself on the floor for 36 hours without medical
+          assistance. So I stopped writing blogs for a period of 6 years. Now I
+          take a new start in blogging with plenty of new neurological pathways!
+        </p><p class="text-sm italic text-gray-500">
+          {author.location}
+        </p><div class="flex flex-row my-2">
+          <a title="LinkedIn link" href={author.linkedinUrl} target="_blank">
+            <Linkedin />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

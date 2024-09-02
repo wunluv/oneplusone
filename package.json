@@ -1,0 +1,27 @@
+{
+  "name": "landing-page-book-astro-svelte-tailwind",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/partytown": "^2.1.0",
+    "@astrojs/sitemap": "^3.1.5",
+    "@astrojs/tailwind": "^5.1.0",
+    "@fontsource/pt-serif": "^5.0.21",
+    "astro": "^4.10.0",
+    "sharp": "^0.33.4",
+    "tailwindcss": "^3.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/vercel": "^7.6.0",
+    "@wixc3/react-board": "^3.0.1",
+    "sass": "^1.77.4",
+    "svelte": "^4.2.18"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "showAmazonTag": false,
+  "showCountingSell": false,
+  "showBuyAudiobookButton": false,
+  "sections": {
+    "showBuyAudiobook": false,
+    "showDownloadFreeChapter": false,
+    "showAboutAuthor": true
+  },
+  "seo": {
+    "title": "One Plus One is One by Normand Bourque",
+    "description": "A Language Thought experiment on the Cosmological Singularity and the Big Bang",
+    "canonical": "https://one-plus-one-is-one.net",
+    "locale": "eng_US",
+    "image": "/og_image_800_600_2.png"
+  },
+  "theme": {
+    "color": "#f59e0b"
+  },
+  "author": {
+    "name": "Normand Bourque",
+    "email": "normand_bourque@gmail.com",
+    "location": "Perth, Australia",
+    "twitterUrl": "https://twitter.com/",
+    "instagramUrl": "https://www.instagram.com/",
+    "linkedinUrl": "https://www.linkedin.com/in/normand-bourque-9a54321a/"
+  },
+  "book": {
+    "title": "One Plus One is One",
+    "isbn": "999999999999999",
+    "releaseDate": "2025-03-28",
+    "price": "34.9",
+    "currency": "AUD",
+    "buyPhysicalUrl": "https://",
+    "buyDigitalUrl": "https://",
+    "buyAudiobookUrl": "#"
+  },
+  "sectionPrices": {
+    "priceLeft": {
+      "title": "Audiobook",
+      "amount": {
+        "decimal": 14,
+        "cents": 95
+      },
+      "details": ["3+ hours", "Format MP3"],
+      "button": {
+        "label": "One Plus One is One",
+        "url": "#"
+      }
+    },
+    "priceMain": {
+      "title": "Physical Book",
+      "amount": {
+        "decimal": 30,
+        "cents": 0
+      },
+      "details": ["164 pages", "Soft Cover", "Colored paper"],
+      "button": {
+        "label": "",
+        "url": ""
+      },
+      "tagTitle": {
+        "title": "Mais Popular",
+        "cssClass": "text-book-gray bg-book-theme"
+      }
+    },
+    "priceRight": {
+      "title": "E-book",
+      "amount": {
+        "decimal": 13,
+        "cents": 99
+      },
+      "previousAmount": "",
+      "details": ["164 Pages", "MOBI"],
+      "button": {
+        "label": "Buy on Amazon",
+        "url": "https://www.amazon.com/One_plus_one_is_one/"
+      }
+    }
+  }
+}
