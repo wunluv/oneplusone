@@ -1,8 +1,4 @@
 ---
-import Twitter from "./icons/Twitter.astro";
-import Github from "./icons/Github.astro";
-import Linkedin from "./icons/Linkedin.astro";
-import Medium from "./icons/Medium.astro";
 import { Image } from "astro:assets";
 
 interface InterviewCompany {
@@ -31,10 +27,19 @@ const interviews: Array<Interviews> = [
       url: "https://heavenletters.org/stars.html",
     },
     summary:
-      "What you may consider unfounded knowledge is pure awareness. All that you have wondered and imagined about the cosmos is true. It is not a flight of fancy you have been on. It is a flight of the heart seeking to reclaim itself.",
+      "Normand, you did it again! Your writing stirs so much in me. And I’m so grateful to you, for how you bring in Heavenletters™. You are the generous of the generous, dear friend.",
     location: "Fiarfield, United States",
-    twitterUrl: "https://twitter.com/auryo_j",
-    mediumUrl: "https://medium.com/@auryoj",
+  },
+  {
+    imageUrl: "/san.jpg",
+    name: "San Naidoo",
+    company: {
+      name: "Founder CommuniTrees & Creative Director of Heavenletters",
+      url: "https://heavenletters.org/stars.html",
+    },
+    summary:
+      "In our world of rapid transformation, its paramount that we bridge the compassion & warmth of spirituality to the clarity and intellect of science. This book is such a bridge.",
+    location: "South Africa",
   },
 ];
 ---
@@ -44,18 +49,18 @@ const interviews: Array<Interviews> = [
     <h2 class="text-3xl leading-9 font-extrabold text-gray-900">
       Feedback from friends...
     </h2>
-    <div class="mt-6 pt-10">
+    <div class="flex flex-col md:flex-row mt-6 pt-10">
       {
         interviews.map((interview) => (
-          <div class="flex-none sm:flex mb-12">
+          <div class="mb-12 w-full mb:w-1/2 p-6">
             <Image
-              class="w-40 h-40 rounded-full mr-8"
+              class="float-left w-40 h-40 rounded-full mr-8"
               src={interview.imageUrl}
               alt={interview.name}
               width={160}
               height={160}
             />
-            <div class="text-sm">
+            <div class="flex flex-col text-sm">
               <p class="text-2xl font-semibold text-gray-900">
                 {interview.name}
               </p>
@@ -69,17 +74,11 @@ const interviews: Array<Interviews> = [
                 </a>
               </p>
               <p class="text-base text-gray-600 mb-1 font-body">
-                Normand, you did it again!<br />
-                Your writing stirs so much in me. <br />
-                And I’m so grateful to you, for how you bring in Heavenletters™.<br />
-                You are the generous of the generous, dear friend.
+                {interview.summary}
               </p>
               <p class="text-sm italic text-gray-500  font-body">
                 {interview.location}
               </p>
-              <div class="flex flex-row my-2">
-
-              </div>
             </div>
           </div>
         ))

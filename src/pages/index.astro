@@ -6,13 +6,16 @@ import Interviews from "../components/Interviews.astro";
 import WhatsInside from "../components/WhatsInside.astro";
 import Footer from "../components/Footer.astro";
 import Quote from "../components/Quote.astro";
+import HeaderQuote from "../components/headerQuote.astro";
 ---
 
 <Layout title="Book Title">
+  <HeaderQuote />
   <HeroSection />
   <Quote />
-  <Interviews />
   <WhyReadThisBook />
+  <Interviews />
   <WhatsInside />
   <Footer />
 </Layout>
+
