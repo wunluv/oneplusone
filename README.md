@@ -17,3 +17,8 @@ Landing page layout and theme. Integrated with Astro & Tailwind
 #### Phase #2
 Import existing Wordpress blogs into Ghost and integrate with current theme
 Ghost https://ghost.org/
+
+
+### Installation
+
+`
