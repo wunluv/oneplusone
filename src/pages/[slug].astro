@@ -1,0 +1,51 @@
+---
+import { ghostClient } from '../lib/ghost';
+
+
+import Layout from '../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+    const posts = await ghostClient.posts
+        .browse({
+            limit: 'all',
+            include: 'authors,tags',
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+    return posts.map((post) => {
+        return {
+            params: {
+                slug: post.slug,
+            },
+            props: {
+                post: post,
+            },
+        };
+    });
+}
+
+const { post } = Astro.props;
+---
+
+<Layout title="Blog Posts">
+        <img src={post.feature_image} alt={post.title} />
+        <p class="image-caption">{post.feature_image_caption}</p>
+<span>{post.feature_image_alt}</span>
+        <h1>{post.title}</h1>
+        <p>{post.reading_time} min read</p>
+<h2>By: {post.authors[0].name}</h2>
+<p>Slug: {post.slug}</p>
+<div>
+    Tags:
+    {post.tags.map((tag) => (
+        <span class="uppercase text-xs mr-2" >
+            <a href={`/tags/${tag.slug}`}>{tag.name}</a>
+        </span>
+    ))}
+</div>
+        <Fragment set:html={post.html} />
+    <pre>{JSON.stringify(post, null, 2)}</pre>
+</Layout>
+
+

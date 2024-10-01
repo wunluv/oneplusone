@@ -1,0 +1,28 @@
+---
+import { ghostClient } from '../lib/ghost';
+// Fetch all tags from Ghost
+const tags = await ghostClient.tags
+    .browse({ limit: 'all' })
+    .catch((err) => {
+        console.error(err);
+    });
+
+// Fetch the post count for each tag
+const tagsWithCounts = await Promise.all(tags.map(async (tag) => {
+  const posts = await ghostClient.posts
+    .browse({ filter: `tag:${tag.slug}` })
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
+
+  return {
+    ...tag,
+    postCount: posts.length,
+  };
+}));
+
+// Filter out tags with zero posts
+const filteredTags = tagsWithCounts.filter(tag => tag.postCount > 0);
+---
+
