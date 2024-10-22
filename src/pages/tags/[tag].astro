@@ -1,6 +1,11 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import Layout from '../../layouts/Layout.astro';
 import { ghostClient } from '../../lib/ghost';
+import Footer from '../../components/Footer.astro';
+import WhatsInside from '../../components/WhatsInside.astro';
+import HeaderMain   from '../../components/headerMain.astro';
+import { Breadcrumbs } from "astro-breadcrumbs";
+import "astro-breadcrumbs/breadcrumbs.css";
 
 // Ensure this function is correct and allPosts is defined within it
 export async function getStaticPaths() {
@@ -24,8 +29,28 @@ const posts = await ghostClient.posts.browse({
   console.error(err);
 });
 ---
-
-<BaseLayout pageTitle={`Posts tagged with ${tag}`}>
+<style global>
+  @tailwind base;
+</style>
+<Layout pageTitle={`Posts tagged with ${tag}`}>
+  <div class="max-w-screen-xl mx-auto">
+  <HeaderMain />
+  <Breadcrumbs />
+  <svg
+    slot="separator"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    ><polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
+  </Breadcrumbs>
+  <div class="max-w-screen-xl mx-auto">
   <h2>Posts tagged with {tag}</h2>
   <ul>
     {posts.map((post) => (
@@ -38,4 +63,8 @@ const posts = await ghostClient.posts.browse({
       </li>
     ))}
   </ul>
-</BaseLayout>
+  </div>
+</div>
+  <WhatsInside />
+<Footer />
+</Layout>

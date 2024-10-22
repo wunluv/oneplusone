@@ -11,6 +11,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+#static files
+prod_db.txt
 
 # environment variables
 .env

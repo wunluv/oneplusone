@@ -1,8 +1,17 @@
 ---
 import { ghostClient } from '../lib/ghost';
+import LayoutBlog from "../layouts/LayoutBlog.astro";
+import Footer from '../components/Footer.astro';
+import WhatsInside from '../components/WhatsInside.astro';
+import HeaderMain   from '../components/headerMain.astro';
+import { Breadcrumbs } from "astro-breadcrumbs";
+import LatestBlogs from '../components/latestBlogs.astro';
+import "astro-breadcrumbs/breadcrumbs.css";
 
 
-import Layout from '../layouts/BaseLayout.astro';
+
+
+
 export async function getStaticPaths() {
     const posts = await ghostClient.posts
         .browse({
@@ -26,26 +35,55 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+
+
 ---
 
-<Layout title="Blog Posts">
-        <img src={post.feature_image} alt={post.title} />
-        <p class="image-caption">{post.feature_image_caption}</p>
-<span>{post.feature_image_alt}</span>
-        <h1>{post.title}</h1>
-        <p>{post.reading_time} min read</p>
-<h2>By: {post.authors[0].name}</h2>
-<p>Slug: {post.slug}</p>
-<div>
-    Tags:
-    {post.tags.map((tag) => (
-        <span class="uppercase text-xs mr-2" >
-            <a href={`/tags/${tag.slug}`}>{tag.name}</a>
-        </span>
-    ))}
+<LayoutBlog title="{post.title}">
+    <div class="max-w-screen-xl mx-auto">
+    <HeaderMain />
+
+    </div>
+    <div class="bg-white">
+        <div class="max-w-screen-lg mx-auto pt-1 pb-4 px-4">
+            <h1 class="text-4xl mb-4 font-semibold text-gray-900 px-4 font-serif">{post.title}</h1>
+
+            <img src={post.feature_image} alt={post.title} />
+            <span>{post.feature_image_alt}</span>
+            <div class="tags mb-8 ml-8 mt-5">
+            Tags:
+            {post.tags.length > 0 ? (
+                post.tags.slice(0, 3).map((tag, index) => (
+                <span class="uppercase bg-gray-100 rounded px-2 py-1 text-gray-600 text-sm mr-2" >
+                    <a href={`/tags/${tag.slug}`}>{tag.name}</a>
+                </span>
+                ))
+            ) : null}
+            </div>
+            <div class="post-details flex ml-10 mb-10">
+            <div class="author-info flex items-center ">
+              <img
+                src={post.authors[0].profile_image}
+                alt={post.authors[0].name}
+                class="w-10 h-10 rounded-full object-cover author-image mr-2"
+              />
+            <div class="flex flex-col text-xs text-gray-500">
+            <span class="mr-2">{post.authors[0].name}</span>
+            <span class="mr-2">{new Date(post.published_at).toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            <span>{post.reading_time} min read</span>
+            </div>
+            </div>
+
+          </div>
+
+<Fragment set:html={post.html} />
+
 </div>
-        <Fragment set:html={post.html} />
-    <pre>{JSON.stringify(post, null, 2)}</pre>
-</Layout>
+    </div>
+
+<LatestBlogs number_of_posts={12}/>
+<WhatsInside />
+<Footer />
+</LayoutBlog>
 
 
