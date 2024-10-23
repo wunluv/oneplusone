@@ -20,3 +20,5 @@ prod_db.txt
 
 # macOS-specific files
 .DS_Store
+
+dist/
