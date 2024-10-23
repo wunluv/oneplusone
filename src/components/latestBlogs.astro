@@ -2,6 +2,7 @@
 import { ghostClient, getGhostImgPath, fetchSettings } from '../lib/ghost';
 import type { Settings } from '@tryghost/content-api';
 import { Image } from "astro:assets";
+import type { PostOrPage } from '@tryghost/content-api'; // Import the type
 
 
 export interface Props {
@@ -9,12 +10,14 @@ export interface Props {
 }
 const { number_of_posts = 6 } = Astro.props;
 // Fetch the latest blog posts from Ghost
-let posts = [];
+let posts: PostOrPage[] = []; // Define the type for posts
 try {
-  posts = await ghostClient.posts.browse({ limit: number_of_posts, order: 'published_at DESC', include: 'authors,tags' });
+  posts = await ghostClient.posts.browse({ limit: number_of_posts, order: 'published_at DESC', include: ['authors', 'tags'] });
 } catch (err) {
   console.error(err);
 }
+
+
 
 // Fetch the settings from Ghost
 let settings: Settings;
@@ -68,7 +71,7 @@ try {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {posts && posts.length > 0 ? (
       posts.map(post => {
-        const postImage = getGhostImgPath(settings.url, post.feature_image, 100);
+        const postImage = getGhostImgPath(settings.url, post.feature_image || '', 100);
         // Print the data to the browser
 
         // Debugging logs
@@ -87,7 +90,7 @@ try {
               inferSize
             />
             <span class="uppercase text-xs">
-              {post.tags.length > 0 ? (
+              {post.tags && post.tags.length > 0 ? (
                 <a href={`/tags/${post.tags[0].slug}`}>{post.tags[0].name}</a>
               ) : null}
             </span>

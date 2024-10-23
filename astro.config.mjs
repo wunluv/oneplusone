@@ -1,15 +1,6 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
-import partytown from '@astrojs/partytown';
-import { postcss } from 'tailwindcss';
+import devConfig from './astro.config.dev.mjs';
+import prodConfig from './astro.config.prod.mjs';
 
-// https://astro.build/config
-export default defineConfig({
-  integrations: [tailwind(), sitemap(), partytown()],
-  output: "static",
-  site: "https://one-plus-one-is-one.net",
-  image: {
-    domains: ["localhost"],
-  },
-});
+const isProduction = process.env.NODE_ENV === 'production';
+
+export default isProduction ? prodConfig : devConfig;
