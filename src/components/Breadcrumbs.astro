@@ -1,0 +1,27 @@
+---
+const { currentPath } = Astro.props; // with leading '/'  e.g /cars/toyota/sedans/toyota-crown
+---
+
+<nav class="py-4 pl-6">
+    <ol class="flex text-sm text-gray-500">
+        <li class="hover:text-gray-700">
+            <a href="/">Home</a>
+        </li>
+        {
+            currentPath
+                .split("/")
+                .slice(1)
+                .map((crumb: string, index: number, array: string[]) => (
+                    <li>
+                        <span class="mx-2">&gt;&gt;</span>
+                        <a
+                            href={`/${array.slice(0, index + 1).join("/")}`}
+                            class="hover:text-gray-700"
+                        >
+                            {crumb}
+                        </a>
+                    </li>
+                ))
+        }
+    </ol>
+</nav>

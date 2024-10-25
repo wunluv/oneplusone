@@ -1,15 +1,16 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { ghostClient } from '../../lib/ghost';
-import Footer from '../../components/Footer.astro';
-import WhatsInside from '../../components/WhatsInside.astro';
-import HeaderMain   from '../../components/headerMain.astro';
-import { Breadcrumbs } from "astro-breadcrumbs";
-import "astro-breadcrumbs/breadcrumbs.css";
+import Layout from "../../layouts/Layout.astro";
+import { ghostClient } from "../../lib/ghost";
+import Footer from "../../components/Footer.astro";
+import WhatsInside from "../../components/WhatsInside.astro";
+import HeaderMain from "../../components/headerMain.astro";
+
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+const currentPath = Astro.url.pathname;
 
 // Ensure this function is correct and allPosts is defined within it
 export async function getStaticPaths() {
-  const allTags = await ghostClient.tags.browse({ limit: 'all' });
+  const allTags = await ghostClient.tags.browse({ limit: "all" });
 
   return allTags.map((tag) => {
     return {
@@ -21,50 +22,49 @@ export async function getStaticPaths() {
 
 // Use Astro's API to get the tag and posts
 const { tag } = Astro.params;
-const posts = await ghostClient.posts.browse({
-  limit: 'all',
-  filter: `tag:${tag}`,
-  include: 'authors,tags',
-}).catch((err) => {
-  console.error(err);
-});
+const posts = await ghostClient.posts
+  .browse({
+    limit: "all",
+    filter: `tag:${tag}`,
+    include: ["authors", "tags"], // Change to an array
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ---
-<style global>
-  @tailwind base;
-</style>
+
 <Layout pageTitle={`Posts tagged with ${tag}`}>
-  <div class="max-w-screen-xl mx-auto">
-  <HeaderMain />
-  <Breadcrumbs />
-  <svg
-    slot="separator"
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    ><polyline points="9 18 15 12 9 6"></polyline>
-  </svg>
-  </Breadcrumbs>
-  <div class="max-w-screen-xl mx-auto">
-  <h2>Posts tagged with {tag}</h2>
-  <ul>
-    {posts.map((post) => (
-      <li key={post.id}>
-        <a href={`/${post.slug}`}>
-          <h3>{post.title}</h3>
-          <p>{post.excerpt}</p>
-          <p>By: {post.authors[0].name}</p>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <HeaderMain />
+    <Breadcrumbs currentPath={currentPath} />
+
+    <main class="pl-6">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+        Posts tagged with {tag}
+      </h2>
+      <div class="space-y-8 pl-2">
+        {
+          (posts || []).map(
+            (
+              post, // Ensure posts is an array
+            ) => (
+              <article class="border-b border-gray-200 pb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                  <a href={`/${post.slug}`} class="hover:text-blue-600">
+                    {post.title}
+                  </a>
+                </h3>
+                <p class="text-gray-600 mb-4">{post.excerpt}</p>
+                <p class="text-sm text-gray-500">
+                  By: {post.authors?.[0]?.name || "Unknown Author"}
+                </p>
+              </article>
+            ),
+          )
+        }
+      </div>
+    </main>
   </div>
-</div>
   <WhatsInside />
-<Footer />
+  <Footer />
 </Layout>

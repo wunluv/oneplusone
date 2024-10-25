@@ -1,40 +1,72 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { ghostClient } from '../../lib/ghost';
+import Layout from "../../layouts/Layout.astro";
+import { ghostClient } from "../../lib/ghost";
+import Footer from "../../components/Footer.astro";
+import WhatsInside from "../../components/WhatsInside.astro";
+import HeaderMain from "../../components/headerMain.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+
+const currentPath = Astro.url.pathname;
 
 // Fetch all tags from Ghost
-const tags = await ghostClient.tags
-    .browse({ limit: 'all' })
-    .catch((err) => {
-        console.error(err);
-    });
+const tags = await ghostClient.tags.browse({ limit: "all" }).catch((err) => {
+  console.error(err);
+  return []; // Return an empty array if there's an error
+});
 
 // Fetch the post count for each tag
-const tagsWithCounts = await Promise.all(tags.map(async (tag) => {
-  const posts = await ghostClient.posts
-    .browse({ filter: `tag:${tag.slug}` })
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
+const tagsWithCounts = await Promise.all(
+  tags.map(async (tag) => {
+    const posts = await ghostClient.posts
+      .browse({ filter: `tag:${tag.slug}` })
+      .catch((err) => {
+        console.error(err);
+        return [];
+      });
 
-  return {
-    ...tag,
-    postCount: posts.length,
-  };
-}));
+    return {
+      ...tag,
+      postCount: posts.length,
+    };
+  }),
+);
 
 // Filter out tags with zero posts
-const filteredTags = tagsWithCounts.filter(tag => tag.postCount > 0);
+const filteredTags = tagsWithCounts.filter((tag) => tag.postCount > 0);
+
+// Sort tags by post count (descending)
+filteredTags.sort((a, b) => b.postCount - a.postCount);
 ---
 
-<BaseLayout pageTitle="All Tags">
-  <h2>All Tags</h2>
-  <ul>
-    {filteredTags.map((tag) => (
-      <li key={tag.id}>
-        <a href={`/tags/${tag.slug}`}>{tag.name} ({tag.postCount} posts)</a> ({tag.postCount} posts)
-      </li>
-    ))}
-  </ul>
-</BaseLayout>
+<Layout pageTitle="Blog Tags">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <HeaderMain />
+    <Breadcrumbs currentPath={currentPath} />
+
+    <main class="py-6">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">All Blog Tags</h2>
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
+      >
+        {
+          filteredTags.map((tag) => (
+            <a
+              href={`/tags/${tag.slug}`}
+              class="block p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 ease-in-out"
+            >
+              <h3 class="text-base font-medium text-gray-900 mb-1 truncate">
+                {tag.name}
+              </h3>
+              <p class="text-s text-gray-600">
+                {tag.postCount} {tag.postCount === 1 ? "post" : "posts"}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </main>
+  </div>
+
+  <WhatsInside />
+  <Footer />
+</Layout>
