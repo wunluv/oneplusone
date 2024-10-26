@@ -7,7 +7,7 @@ import node from '@astrojs/node';
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), sitemap(), partytown()],
-  output: "hybrid", // or "server" if you prefer SSR
+  output: "server", // or "server" if you prefer SSR
   adapter: node({
     mode: 'standalone', // or 'middleware' depending on your needs
   }),

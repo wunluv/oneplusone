@@ -47,7 +47,15 @@ const { post } = Astro.props;
             {post.title}
         </h1>
 
-        <Image src={post.feature_image} alt={post.title} class="pl-8" />
+        <Image
+            src={post.feature_image ??
+                "http://localhost:2368/content/images/wordpress/2013/05/dreamstime_xs_12977880_3.jpg"}
+            alt={post.feature_image_alt || post.title}
+            class="mb-2 mt-10 pl-8"
+            widths={[800]}
+            inferSize
+        />
+
         <span>{post.feature_image_alt}</span>
         <div class="tags mb-8 ml-8 mt-5">
             Tags:
