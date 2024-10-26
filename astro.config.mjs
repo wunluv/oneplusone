@@ -1,14 +1,10 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
-import partytown from '@astrojs/partytown';
+// Determine the environment
+const isProduction = process.env.NODE_ENV === 'production'; // Check if in production
 
-// https://astro.build/config
-export default defineConfig({
-  integrations: [tailwind(), sitemap(), partytown()],
-  output: "static",
-  site: "https://one-plus-one-is-one.net",
-  image: {
-    domains: ["localhost"],
-  },
-});
+// Import the appropriate configuration based on the environment
+const config = isProduction
+    ? await import('./astro.config.prod.mjs') // Load production config if true
+    : await import('./astro.config.dev.mjs'); // Load development config if false
+
+// Export the configuration
+export default config.default;

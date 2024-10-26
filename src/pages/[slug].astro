@@ -1,5 +1,6 @@
 ---
 import { ghostClient } from "../lib/ghost";
+import { Image } from "astro:assets";
 import type { PostOrPage } from "@tryghost/content-api";
 import LayoutBlog from "../layouts/LayoutBlog.astro";
 import Footer from "../components/Footer.astro";
@@ -46,7 +47,7 @@ const { post } = Astro.props;
             {post.title}
         </h1>
 
-        <img src={post.feature_image} alt={post.title} class="pl-8" />
+        <Image src={post.feature_image} alt={post.title} class="pl-8" />
         <span>{post.feature_image_alt}</span>
         <div class="tags mb-8 ml-8 mt-5">
             Tags:
