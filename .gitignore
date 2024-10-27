@@ -14,6 +14,9 @@ pnpm-debug.log*
 #static files
 prod_db.txt
 
+#astro dist folder
+dist/
+
 # environment variables
 .env
 .env.production
