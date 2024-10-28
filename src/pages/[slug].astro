@@ -10,6 +10,9 @@ import LatestBlogs from "../components/latestBlogs.astro";
 import type { Post } from "../types/Post";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 const currentPath = Astro.url.pathname;
+const placeholderImage = import.meta.env.PLACEHOLDER_IMAGE;
+const placeholderTitle = import.meta.env.PLACEHOLDER_TITLE;
+const placeholderMessage = import.meta.env.PLACEHOLDER_MESSAGE;
 
 export async function getStaticPaths() {
     const posts = await ghostClient.posts
@@ -37,7 +40,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 ---
 
-<LayoutBlog title="{post.title}">
+<LayoutBlog title={post.title || placeholderTitle}>
     <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <HeaderMain />
         <Breadcrumbs currentPath={currentPath} />
@@ -49,7 +52,7 @@ const { post } = Astro.props;
 
         <Image
             src={post.feature_image ??
-                "http://localhost:2368/content/images/wordpress/2013/05/dreamstime_xs_12977880_3.jpg"}
+                "https://ghost.mojah2.mojahmedia.net/content/images/size/w1200/wordpress/2014/06/70.jpg"}
             alt={post.feature_image_alt || post.title}
             class="mb-2 mt-10 pl-8"
             widths={[800]}

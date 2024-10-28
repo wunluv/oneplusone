@@ -6,6 +6,9 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  server: {
+    host: true,
+  },
   integrations: [tailwind(), sitemap(), partytown()],
   output: "server", // or "server" if you prefer SSR
   adapter: node({

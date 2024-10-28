@@ -16,6 +16,7 @@ prod_db.txt
 
 #astro dist folder
 dist/
+dist/*
 
 # environment variables
 .env
