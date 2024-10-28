@@ -1,5 +1,23 @@
 ---
 import { ghostClient } from "../lib/ghost";
+import type { AstroConfig } from "astro";
+
+export async function getStaticPaths() {
+    type Path = { params: { slug: string } };
+    let paths: Path[] = [];
+    try {
+        const posts = await ghostClient.posts.browse({
+            limit: "all",
+            fields: "slug",
+        });
+        paths = posts.map((post) => ({ params: { slug: post.slug } }));
+    } catch (err) {
+        console.error("Error fetching slugs:", err);
+    }
+    return paths;
+}
+
+import { getGhostImgPath } from "../lib/ghost";
 import { Image } from "astro:assets";
 import type { PostOrPage } from "@tryghost/content-api";
 import LayoutBlog from "../layouts/LayoutBlog.astro";
@@ -7,103 +25,104 @@ import Footer from "../components/Footer.astro";
 import WhatsInside from "../components/WhatsInside.astro";
 import HeaderMain from "../components/headerMain.astro";
 import LatestBlogs from "../components/latestBlogs.astro";
-import type { Post } from "../types/Post";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+
 const currentPath = Astro.url.pathname;
 const placeholderImage = import.meta.env.PLACEHOLDER_IMAGE;
 const placeholderTitle = import.meta.env.PLACEHOLDER_TITLE;
 const placeholderMessage = import.meta.env.PLACEHOLDER_MESSAGE;
 
-export async function getStaticPaths() {
-    const posts = await ghostClient.posts
-        .browse({
-            limit: "all",
-            include: ["authors", "tags"],
-        })
-        .catch((err) => {
-            console.error(err);
-            return [];
-        });
+let post: PostOrPage | null = null;
 
-    return posts.map((post: PostOrPage) => {
-        return {
-            params: {
-                slug: post.slug,
-            },
-            props: {
-                post: post,
-            },
-        };
-    });
+try {
+    const slug = Astro.params.slug;
+    post = await ghostClient.posts.read(
+        { slug },
+        { include: ["authors", "tags"] },
+    );
+} catch (err) {
+    console.error("Error fetching post:", err);
 }
-
-const { post } = Astro.props;
 ---
 
-<LayoutBlog title={post.title || placeholderTitle}>
+<LayoutBlog title={post?.title || placeholderTitle}>
     <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <HeaderMain />
         <Breadcrumbs currentPath={currentPath} />
-        <h1
-            class="text-3xl ml-2 mb-8 font-semibold text-gray-900 px-4 font-serif"
-        >
-            {post.title}
-        </h1>
+        {
+            post ? (
+                <>
+                    <h1 class="text-3xl ml-2 mb-8 font-semibold text-gray-900 px-4 font-serif">
+                        {post.title}
+                    </h1>
 
-        <Image
-            src={post.feature_image ?? placeholderImage}
-            alt={post.feature_image_alt || placeholderTitle}
-            class="mb-2 mt-10 pl-8"
-            widths={[800]}
-            inferSize
-        />
+                    <Image
+                        src={
+                            (post.feature_image) ||
+                            placeholderImage
+                        }
+                        alt={post.feature_image_alt || placeholderTitle}
+                        class="mb-2 mt-10 pl-8"
+                        widths={[800]}
+                        inferSize
+                    />
 
-        <span>{post.feature_image_alt}</span>
-        <div class="tags mb-8 ml-8 mt-5">
-            Tags:
-            {
-                post.tags && post.tags.length > 0
-                    ? post.tags.slice(0, 3).map((tag, index) => (
-                          <span class="uppercase bg-gray-100 rounded px-2 py-1 text-gray-600 text-sm mr-2">
-                              <a href={`/tags/${tag.slug}`}>{tag.name}</a>
-                          </span>
-                      ))
-                    : null
-            }
-        </div>
-        <div class="post-details flex ml-10 mb-10">
-            <div class="author-info flex items-center">
-                <img
-                    src={post.authors?.[0]?.profile_image}
-                    alt={post.authors?.[0]?.name || "Unkown Author"}
-                    class="w-10 h-10 rounded-full object-cover author-image mr-2"
-                />
-                <div class="flex flex-col text-xs text-gray-500">
-                    <span class="mr-2"
-                        >{post.authors?.[0]?.name || "Unknown Author"}</span
-                    >
-                    <span class="mr-2"
-                        >{
-                            post.published_at
-                                ? new Date(post.published_at).toLocaleString(
-                                      "en-US",
-                                      {
-                                          weekday: "short",
-                                          year: "numeric",
-                                          month: "short",
-                                          day: "numeric",
-                                      },
-                                  )
-                                : "Unknown Date"
-                        }</span
-                    >
-                    <span>{post.reading_time} min read</span>
+                    <span>{post.feature_image_alt}</span>
+                    <div class="tags mb-8 ml-8 mt-5">
+                        Tags:
+                        {post.tags && post.tags.length > 0
+                            ? post.tags.slice(0, 3).map((tag) => (
+                                  <span class="uppercase bg-gray-100 rounded px-2 py-1 text-gray-600 text-sm mr-2">
+                                      <a href={`/tags/${tag.slug}`}>
+                                          {tag.name}
+                                      </a>
+                                  </span>
+                              ))
+                            : null}
+                    </div>
+                    <div class="post-details flex ml-10 mb-10">
+                        <div class="author-info flex items-center">
+                            <img
+                                src={post.authors?.[0]?.profile_image}
+                                alt={
+                                    post.authors?.[0]?.name || "Unknown Author"
+                                }
+                                class="w-10 h-10 rounded-full object-cover author-image mr-2"
+                            />
+                            <div class="flex flex-col text-xs text-gray-500">
+                                <span class="mr-2">
+                                    {post.authors?.[0]?.name ||
+                                        "Unknown Author"}
+                                </span>
+                                <span class="mr-2">
+                                    {post.published_at
+                                        ? new Date(
+                                              post.published_at,
+                                          ).toLocaleString("en-US", {
+                                              weekday: "short",
+                                              year: "numeric",
+                                              month: "short",
+                                              day: "numeric",
+                                          })
+                                        : "Unknown Date"}
+                                </span>
+                                <span>{post.reading_time} min read</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-content ml-8 mr-8">
+                        <Fragment set:html={post.html} class="pl-8" />
+                    </div>
+                </>
+            ) : (
+                <div>
+                    <h1 class="text-3xl ml-2 mb-8 font-semibold text-gray-900 px-4 font-serif">
+                        {placeholderTitle}
+                    </h1>
+                    <p class="text-gray-600">{placeholderMessage}</p>
                 </div>
-            </div>
-        </div>
-        <div class="post-content ml-8 mr-8">
-            <Fragment set:html={post.html} class="pl-8" />
-        </div>
+            )
+        }
     </div>
 </LayoutBlog>
 <LatestBlogs number_of_posts={12} />

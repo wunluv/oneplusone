@@ -3,15 +3,37 @@ import { ghostClient, getGhostImgPath, fetchSettings } from '../lib/ghost';
 import type { Settings } from '@tryghost/content-api';
 import { Image } from "astro:assets";
 
+type BlogPost = {
+  id: string;
+  title: string;
+  feature_image: string;
+  feature_image_alt?: string;
+  slug: string;
+  tags: any[]; // Replace 'any' with a more specific type if available
+  authors: any[]; // Replace 'any' with a more specific type if available
+  published_at: string;
+  reading_time: number;
+};
 
 export interface Props {
   number_of_posts?: number;
 }
 const { number_of_posts = 6 } = Astro.props;
 // Fetch the latest blog posts from Ghost
-let posts = [];
+let posts: BlogPost[] = []; // Use the BlogPost type for the posts array
 try {
-  posts = await ghostClient.posts.browse({ limit: number_of_posts, order: 'published_at DESC', include: 'authors,tags' });
+  const fetchedPosts = await ghostClient.posts.browse({ limit: number_of_posts, order: 'published_at DESC', include: 'authors,tags' });
+  posts = fetchedPosts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    feature_image: post.feature_image,
+    feature_image_alt: post.feature_image_alt,
+    slug: post.slug,
+    tags: post.tags,
+    authors: post.authors,
+    published_at: post.published_at,
+    reading_time: post.reading_time,
+  }));
 } catch (err) {
   console.error(err);
 }
