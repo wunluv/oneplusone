@@ -51,9 +51,8 @@ const { post } = Astro.props;
         </h1>
 
         <Image
-            src={post.feature_image ??
-                "https://ghost.mojah2.mojahmedia.net/content/images/size/w1200/wordpress/2014/06/70.jpg"}
-            alt={post.feature_image_alt || post.title}
+            src={post.feature_image ?? placeholderImage}
+            alt={post.feature_image_alt || placeholderTitle}
             class="mb-2 mt-10 pl-8"
             widths={[800]}
             inferSize
